@@ -91,5 +91,5 @@
 	"prettier": {
 		"useTabs": true,
 		"tabWidth": 2
-	}
+  }
 }

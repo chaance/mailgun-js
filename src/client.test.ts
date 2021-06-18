@@ -10,14 +10,33 @@ import { RoutesClient } from "./routes";
 import { ValidateClient } from "./validate";
 import { ParseClient } from "./parse";
 
-describe("Client", function () {
-	let client: Client;
+import nodeFetch from "node-fetch";
 
-	beforeEach(function () {
-		client = new Client(
-			{ username: "username", key: "key", publicKey: "key", timeout: 10000 },
-			formData
-		);
+// https://github.com/sindresorhus/ky/issues/170
+// import ky from "ky-universal";
+
+const CLIENT_OPTS = {
+	username: "username",
+	key: "key",
+	publicKey: "key",
+	timeout: 10000,
+};
+
+describe("Client", () => {
+	let client: Client;
+	let originalFetch = global.fetch;
+	let mockFetch: typeof global.fetch = async () =>
+		(await Promise.resolve({
+			json: () => Promise.resolve({ rates: { CAD: 1.42 } }),
+		})) as any;
+
+	beforeEach(() => {
+		global.fetch = jest.fn(mockFetch);
+		client = new Client(CLIENT_OPTS, formData);
+	});
+
+	afterEach(() => {
+		global.fetch = originalFetch;
 	});
 
 	it("raises error when username is not provided", () => {
@@ -27,27 +46,43 @@ describe("Client", function () {
 		}).toThrow('Parameter "username" is required');
 	});
 
-	it("raises error when key is not provided", function () {
-		expect(function () {
+	it("raises error when key is not provided", () => {
+		expect(() => {
 			// @ts-expect-error
 			client = new Client({ username: "username" }, formData);
 		}).toThrow('Parameter "key" is required');
 	});
 
-	it("exposes raw request client", function () {
+	it("allows node-fetch requests", () => {
+		client = new Client({ ...CLIENT_OPTS, fetch: nodeFetch }, formData);
+
+		// @ts-expect-error
+		expect(client.request.fetch).toEqual(nodeFetch);
+		// @ts-expect-error
+		expect(typeof client.request.fetch).toBe("function");
+	});
+
+	it("uses global.fetch if no fetch function is provided", () => {
+		// @ts-expect-error
+		expect(client.request.fetch).toEqual(global.fetch);
+		// @ts-expect-error
+		expect(typeof client.request.fetch).toBe("function");
+	});
+
+	it("exposes raw request client", () => {
 		// @ts-expect-error
 		expect(client.request).toBeInstanceOf(Request);
 	});
 
-	it("creates domain client", function () {
+	it("creates domain client", () => {
 		expect(client.domains).toBeInstanceOf(DomainClient);
 	});
 
-	it("creates event client", function () {
+	it("creates event client", () => {
 		expect(client.events).toBeInstanceOf(EventClient);
 	});
 
-	it("creates webhook client", function () {
+	it("creates webhook client", () => {
 		expect(client.webhooks).toBeInstanceOf(WebhookClient);
 	});
 
