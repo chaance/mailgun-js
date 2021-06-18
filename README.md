@@ -4,7 +4,21 @@ A fork of https://github.com/mailgun/mailgun-js
 
 This is for my personal use, but it may be useful for others. I might add my own documentation eventually but the API is mostly the same as the original.
 
-## Key differences
+TODO:
+- Changelog
+- Better docs
+- Finish this TODO list :)
+
+
+## Installation
+
+```bash
+npm install @chance/mailgun-js
+# OR
+yarn add @chance/mailgun-js
+```
+
+## Key differences from `mailgun.js`
 
 When instantiating a client, the original lib has a dependency on `ky-universal`. You might already be using `node-fetch` or some other wrapper in your project, so this fork requires you to establish that dependency and tell the client how to make requests.
 
