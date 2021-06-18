@@ -1,7 +1,7 @@
 {
 	"name": "@chance/mailgun-js",
 	"private": false,
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "A JavaScript SDK for Mailgun.",
 	"license": "MIT",
 	"repository": {
@@ -15,22 +15,23 @@
 	},
 	"main": "dist/mailgun-js.cjs.js",
 	"module": "dist/mailgun-js.esm.js",
-	"types": "dist/declarations/index.d.ts",
+	"types": "dist/mailgun-js.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
 	"engines": {
 		"node": ">=12"
 	},
 	"scripts": {
-		"// test": "nyc ava",
-		"// docs": "typedoc src/index.ts",
-		"tc": "tsc --project tsconfig.build.json",
+		"build:types": "tsc --project tsconfig.build.json",
 		"clean": "del-cli dist",
 		"test": "jest",
-		"build": "npm run clean && node scripts/build && npm run tc",
-		"// build": "npm run clean && tsc",
+		"build": "npm run clean && node scripts/build && npm run build:types",
 		"// prepare": "npm run build"
 	},
 	"files": [
 		"README.md",
+		"src",
 		"dist"
 	],
 	"keywords": [
@@ -51,9 +52,9 @@
 		"@types/fs-extra": "^9.0.11",
 		"@types/jest": "^26.0.23",
 		"@types/node": "^15.12.2",
+		"@types/node-fetch": "^2.5.10",
 		"@typescript-eslint/eslint-plugin": "^4.27.0",
 		"@typescript-eslint/parser": "^4.27.0",
-		"ava": "^2.4.0",
 		"babel-eslint": "^10.1.0",
 		"chalk": "^4.1.1",
 		"del-cli": "^4.0.0",
@@ -64,7 +65,7 @@
 		"eslint-plugin-testing-library": "^3.10.2",
 		"fs-extra": "^10.0.0",
 		"jest": "^27.0.4",
-		"nyc": "^15.1.0",
+		"ky-universal": "0.9.1",
 		"prettier": "^2.3.1",
 		"pretty-bytes": "^5.6.0",
 		"pretty-ms": "^5.1.0",
@@ -77,26 +78,6 @@
 		"./dist/utils/infer-label.js": "./dist/utils/infer-label.browser.js"
 	},
 	"sideEffects": false,
-	"ava": {
-		"babel": false,
-		"compileEnhancements": false,
-		"files": [
-			"test/**",
-			"!test/fixtures/**"
-		],
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	},
-	"nyc": {
-		"reporter": [
-			"text",
-			"lcov"
-		]
-	},
 	"eslintConfig": {
 		"extends": [
 			"@chancedigital",
