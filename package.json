@@ -15,23 +15,23 @@
 	},
 	"main": "dist/mailgun-js.cjs.js",
 	"module": "dist/mailgun-js.esm.js",
-	"types": "dist/mailgun-js.d.ts",
+	"types": "dist/declarations/index.d.ts",
 	"engines": {
 		"node": ">=12"
 	},
 	"scripts": {
 		"// test": "nyc ava",
 		"// docs": "typedoc src/index.ts",
+		"tc": "tsc --project tsconfig.build.json",
 		"clean": "del-cli dist",
 		"test": "jest",
-		"build": "npm run clean && node scripts/build",
+		"build": "npm run clean && node scripts/build && npm run tc",
 		"// build": "npm run clean && tsc",
 		"// prepare": "npm run build"
 	},
 	"files": [
 		"README.md",
-		"dist",
-		"dev-only.js"
+		"dist"
 	],
 	"keywords": [
 		"mailgun",
